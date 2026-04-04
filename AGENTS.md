@@ -1,181 +1,153 @@
 # AGENTS.md - Coding Agent Guidelines
 
 ## Project Overview
-Pensión El Carmen - A React + Vite landing page for a boutique hostel with a "Boutique Vibes" aesthetic (tranquility, elegance, minimalism). The design uses warm colors (terracotta, taupe, off-whites) and editorial typography.
+Pensión El Carmen - React + Vite landing page for a Madrid hostel. GSAP animations with ScrollTrigger. Design: tranquility, simplicity, minimalism.
 
 ## Build/Lint/Test Commands
-
 ```bash
-# Install dependencies
-cd web && npm install
-
-# Start development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Preview production build
-npm run preview
-
-# Run ESLint
-npm run lint
+# All commands must be run from the web/ directory
+cd web && npm install        # Install dependencies
+npm run dev                  # Start development server
+npm run build                # Build for production
+npm run preview              # Preview production build
+npm run lint                 # Run ESLint
 ```
-
-**Note:** No test framework is currently configured. If tests are added, follow the project's testing conventions.
+**Note:** No test framework configured.
 
 ## Tech Stack
-- **Framework:** React 19 + Vite
-- **Language:** JavaScript (ES modules, no TypeScript)
-- **Styling:** Tailwind CSS v3
-- **Linting:** ESLint v9 with flat config
-- **Package Manager:** npm
+React 19 + Vite | JavaScript (ES modules) | Tailwind CSS v3 | GSAP + @gsap/react + ScrollTrigger | ESLint v9 flat config
 
 ## Project Structure
 ```
 web/
 ├── src/
-│   ├── main.jsx              # Entry point
+│   ├── main.jsx              # Entry point, wraps providers
 │   ├── App.jsx               # Main App component
-│   ├── index.css             # Global styles & Tailwind imports
-│   ├── components/           # React components (one per file)
-│   │   ├── Header.jsx
-│   │   ├── HeroSection.jsx
-│   │   ├── ValueProposition.jsx
-│   │   ├── RoomsGallery.jsx
-│   │   ├── LocationSection.jsx
-│   │   ├── ContactSection.jsx
-│   │   └── Footer.jsx
-│   └── assets/               # Static assets (images, icons)
-├── public/                   # Static files served directly
-├── index.html                # HTML template
-├── package.json              # Dependencies and scripts
-├── vite.config.js            # Vite configuration
-├── tailwind.config.js        # Tailwind configuration
+│   ├── index.css             # Global styles, Tailwind, fonts
+│   ├── context/              # React contexts (LanguageContext)
+│   ├── translations.js       # i18n translation data
+│   └── components/           # React components (one per file)
+├── public/                   # Static assets
+├── index.html
+├── tailwind.config.js        # Custom colors & fonts
 └── eslint.config.js          # ESLint flat config
 ```
 
 ## Code Style Guidelines
 
-### Imports
-- Group imports logically: React imports first, then external libraries, then local modules
-- Use named imports from React: `import { useState } from 'react'`
-- Use explicit `.jsx` extensions in import paths for local components
-- CSS files imported in `index.css` or component-level
-
+### Import Order
 ```jsx
-import { useState } from 'react'
-import Header from './components/Header.jsx'
+import { useRef } from 'react'
+import { useGSAP } from '@gsap/react'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useLanguage } from '../context/LanguageContext.jsx'
 ```
 
-### Components
-- Use function components with hooks (React 19)
-- One component per file in `src/components/`
-- Export components as default: `export default ComponentName`
-- Keep components pure and presentational
-
-### Formatting
-- Use 2-space indentation
-- Use single quotes for strings
-- Use parentheses for multi-line JSX
-- Self-closing tags: `<img src={src} alt="" />`
-
-### Naming Conventions
+### Components & Naming
+- Function components with hooks
+- One component per file, default export
 - **Components:** PascalCase (`Header`, `HeroSection`)
 - **Functions:** camelCase (`handleSubmit`)
-- **Constants:** UPPER_SNAKE_CASE for true constants
-- **Files:** Match component name (`Header.jsx`)
+- **Constants:** UPPER_SNAKE_CASE
+- **Files:** Match component (`Header.jsx`)
+- **GSAP selectors:** Descriptive kebab-case (`.room-card`, `.decor-line`)
 
-### JSX Style
-- Use fragments (`<>...</>`) instead of `<div>` when no container needed
-- Prefer arrow functions inline: `onClick={() => setCount(c => c + 1)}`
-- Use semantic HTML elements (`<section>`, `<nav>`, `<article>`)
-- Add `role="presentation"` and `aria-hidden="true"` for decorative SVGs
+### Formatting
+- 2-space indentation, single quotes
+- Self-closing tags: `<img src={src} alt="" />`
+- No comments unless absolutely necessary
 
-## Design System: "Boutique Vibes"
-
-### The "No-Line" Rule
-**CRITICAL:** Do NOT use `1px solid` borders for sectioning or containment.
-- Define boundaries through background color shifts
-- Use `surface` → `surface-container-low` → `surface-container-lowest` hierarchy
-- If borders are required for accessibility, use `outline-variant/15` (15% opacity)
-
-### Color Palette
-- **Primary (Terracotta):** `#8e4d30` - use for CTAs, accents
-- **Primary Container:** `#cc7f5e` - gradient endpoint
-- **Surface:** `#fafaf3` - base canvas
-- **Surface Container Low:** `#f5f4ed` - secondary sections
-- **Surface Container Lowest:** `#ffffff` - floating cards
-- **On-surface:** `#1b1c18` - primary text
-
-### Buttons
-- **Primary:** Gradient from `primary` to `primary-container`, `rounded-sm`, no border
-- **Secondary:** Ghost style, `shadow-sm` for elevation, no solid borders
-- Hover: opacity change, avoid dramatic scale transforms
-
-### Typography
-- **Headlines:** `font-headline` (Noto Serif) - editorial, artisanal feel
-- **Body:** `font-body` (Inter) - functional text
-- Pair large headings with smaller body text for contrast
-
-### Spacing & Layout
-- Use generous whitespace (`py-24`, `gap-12`, `gap-16`)
-- Mobile-first responsive design with `md:` breakpoints
-- Section padding: `py-24 px-8`
-- Card padding: `p-8`
-
-### Transitions
-- Timing: `cubic-bezier(0.4, 0, 0.2, 1)`
-- Duration: minimum `duration-300`
-- Maintain tranquil feel - no bouncy or instant transitions
-
-## File Organization
-- Components in `src/components/`
-- One component per file
-- Use index.html for page title
-
-## Best Practices
-1. **Mobile-First:** Design for mobile, add `md:` breakpoints for larger screens
-2. **Accessibility:** Add `alt` text for meaningful images, empty `alt=""` for decorative
-3. **Performance:** Use lazy loading for images below the fold
-4. **Self-Documenting:** Prefer descriptive names over comments
-5. **No Comments:** Code should be self-explanatory. Only comment non-obvious business logic
-
-## ESLint Configuration
-- `no-unused-vars`: Error (ignores variables matching `^[A-Z_]`)
-- `react-hooks/rules-of-hooks`: Error
-- `react-refresh/only-export-components`: Warn
-
-Run `npm run lint` before committing.
-
-## Common Patterns
-
-### Section Structure
+### Error Handling (Context Pattern)
 ```jsx
-function MySection() {
-  return (
-    <section className="py-24 px-8 bg-surface">
-      <div className="max-w-7xl mx-auto">
-        {/* Content */}
-      </div>
-    </section>
-  )
+export function useLanguage() {
+  const context = useContext(LanguageContext)
+  if (!context) throw new Error('useLanguage must be used within LanguageProvider')
+  return context
 }
 ```
 
-### Card with Tonal Layering
+## GSAP Animation Guidelines
+
+### Critical Rules
+1. **ALWAYS use `useGSAP`** from `@gsap/react` - NEVER `useEffect`
+2. **Single ref per component** attached to `<section>` or `<footer>`
+3. **Always use scope**: `{ scope: sectionRef }` in `useGSAP`
+4. **Register plugins at module level**: `gsap.registerPlugin(ScrollTrigger)`
+
+### Reference Pattern
 ```jsx
-<div className="p-8 bg-surface-container-low hover:bg-surface-container-lowest transition-all duration-300">
-  {/* Card content */}
-</div>
+function MyComponent() {
+  const sectionRef = useRef(null)
+  useGSAP(() => {
+    gsap.from('.content', {
+      y: 30, opacity: 0, duration: 0.6, ease: 'power3.out',
+      scrollTrigger: { trigger: sectionRef.current, start: 'top 80%', toggleActions: 'play none none reverse' },
+    })
+  }, { scope: sectionRef })
+  return <section ref={sectionRef}>...</section>
+}
 ```
 
-### Primary CTA Button
+### ScrollTrigger Patterns
+**Standard sections:** `scrollTrigger: { trigger: sectionRef.current, start: 'top 80%', toggleActions: 'play none none reverse' }`
+
+**End-of-page (Footer, ContactSection) - prevent flicker:**
 ```jsx
-<button className="px-10 py-4 bg-gradient-to-r from-primary to-primary-container text-white rounded-sm hover:opacity-90 transition-all duration-300">
-  Button Text
-</button>
+gsap.fromTo('.content', { y: 20, opacity: 0 },
+  { y: 0, opacity: 1, duration: 0.6, ease: 'power3.out',
+    scrollTrigger: { trigger: sectionRef.current, start: 'top bottom', once: true } })
 ```
 
-### Google Maps Embed
-Use the standard embed URL format with `width="100%" height="100%"` and `style={{ border: 0 }}`.
+### Animation Values
+- Easing: `power3.out` (entry), `power3.inOut` (reveals)
+- Duration: `0.6s` - `1.2s` | Stagger: `0.15s`
+
+## Design System
+
+### ⚠️ The "No-Line" Rule (CRITICAL)
+**NEVER use `1px solid` borders for containment.**
+- Use tonal layering: `bg-surface` → `bg-surface-container-low` → `bg-surface-container-lowest`
+- Ghost borders only: `border-t border-outline-variant/15`
+- Cards: Use `shadow-md` + `-translate-y-2` on hover
+
+### Colors & Typography
+- **Primary:** `#8e4d30` (terracotta) - CTAs, accents
+- **Surface:** `#fafaf3` - canvas | **On-surface:** `#1b1c18` - text
+- **Surface Container Low:** `#f5f4ed` - secondary sections
+- **Headlines:** `font-headline` (Noto Serif) | **Body:** `font-body` (Inter)
+
+### Hover Effects
+- Cards: `-translate-y-2 shadow-md`
+- Buttons: `opacity-90`, no scale
+- Transitions: `duration-300` minimum
+
+## Context Pattern
+```jsx
+// context/LanguageContext.jsx
+const LanguageContext = createContext(null)
+export function LanguageProvider({ children }) {
+  const [language, setLanguage] = useState('es')
+  return <LanguageContext.Provider value={{ language, ... }}>{children}</LanguageContext.Provider>
+}
+export function useLanguage() {
+  const context = useContext(LanguageContext)
+  if (!context) throw new Error('useLanguage must be used within LanguageProvider')
+  return context
+}
+// main.jsx - wrap App with provider
+<LanguageProvider><App /></LanguageProvider>
+```
+
+## ESLint Configuration
+- `no-unused-vars`: Error (ignores `^[A-Z_]`)
+- `react-hooks/rules-of-hooks`: Error
+- `react-refresh/only-export-components`: Warn (off for context files)
+
+Run `npm run lint` before committing.
+
+## Best Practices
+1. **Mobile-first:** Design for mobile, add `md:` breakpoints
+2. **Accessibility:** Meaningful `alt` text for images
+3. **Self-documenting code:** No comments needed
+4. **Work directory:** Commands must run from `web/`

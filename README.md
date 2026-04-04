@@ -23,3 +23,4 @@ npm install
 
 # Arrancar el servidor de desarrollo
 npm run dev
+npm run dev -- --host

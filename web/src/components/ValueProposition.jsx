@@ -1,48 +1,36 @@
-const features = [
-  {
-    icon: 'home',
-    title: 'Ambiente boutique para el descanso',
-    description:
-      'Espacios diseñados para tu paz mental, alejados del bullicio urbano sin salir de la metrópolis.',
-  },
-  {
-    icon: 'subway',
-    title: 'A minutos de la estación Retiro',
-    description:
-      'Conexión directa con los puntos más importantes de la ciudad a solo pasos de nuestra puerta.',
-  },
-  {
-    icon: 'shopping_bag',
-    title: 'Cerca del Centro Comercial Galería',
-    description:
-      'Acceso privilegiado a las mejores tiendas, restaurantes y vida cultural de la zona.',
-  },
-]
+import { useRef } from 'react'
+import { useGSAP } from '@gsap/react'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useLanguage } from '../context/LanguageContext.jsx'
+
+gsap.registerPlugin(ScrollTrigger)
 
 function ValueProposition() {
+  const sectionRef = useRef(null)
+  const { language, translations } = useLanguage()
+  const t = translations[language]
+
+  useGSAP(() => {
+    gsap.from('.value-text', {
+      y: 30,
+      opacity: 0,
+      duration: 0.8,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: 'top 85%',
+        toggleActions: 'play none none reverse',
+      },
+    })
+  }, { scope: sectionRef })
+
   return (
-    <section className="py-24 px-8 bg-surface">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-          {features.map((feature) => (
-            <div
-              key={feature.icon}
-              className="group flex flex-col items-center text-center p-8 bg-surface-container-low transition-all duration-300 hover:bg-surface-container-lowest"
-            >
-              <div className="mb-6 text-primary">
-                <span className="material-symbols-outlined text-4xl">
-                  {feature.icon}
-                </span>
-              </div>
-              <h3 className="font-headline text-xl mb-4 text-on-surface">
-                {feature.title}
-              </h3>
-              <p className="text-on-surface-variant font-light leading-relaxed">
-                {feature.description}
-              </p>
-            </div>
-          ))}
-        </div>
+    <section ref={sectionRef} className="py-12 px-8 bg-surface">
+      <div className="max-w-3xl mx-auto text-center">
+        <p className="value-text text-lg md:text-2xl leading-relaxed text-on-surface-variant font-light">
+          {t.valueProposition}
+        </p>
       </div>
     </section>
   )
